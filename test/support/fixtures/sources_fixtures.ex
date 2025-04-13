@@ -23,4 +23,28 @@ defmodule Jobex.SourcesFixtures do
 
     company
   end
+
+  @doc """
+  Generate a unique contact email.
+  """
+  def unique_contact_email, do: "some-email#{System.unique_integer([:positive])}@example.com"
+
+  @doc """
+  Generate a contact.
+  """
+  def contact_fixture(attrs \\ %{}) do
+    company = company_fixture()
+
+    {:ok, contact} =
+      attrs
+      |> Enum.into(%{
+        email: unique_contact_email(),
+        first_name: "some first_name",
+        last_name: "some last_name",
+        company_id: company.id
+      })
+      |> Jobex.Sources.create_contact()
+
+    contact
+  end
 end
