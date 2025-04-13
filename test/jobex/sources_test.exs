@@ -58,4 +58,74 @@ defmodule Jobex.SourcesTest do
       assert %Ecto.Changeset{} = Sources.change_company(company)
     end
   end
+
+  describe "contacts" do
+    alias Jobex.Sources.Contact
+
+    import Jobex.SourcesFixtures
+
+    @invalid_attrs %{first_name: nil, last_name: nil, email: nil}
+
+    test "list_contacts/0 returns all contacts" do
+      contact = contact_fixture()
+      assert Sources.list_contacts() == [contact]
+    end
+
+    test "get_contact!/1 returns the contact with given id" do
+      contact = contact_fixture()
+      assert Sources.get_contact!(contact.id) == contact
+    end
+
+    test "create_contact/1 with valid data creates a contact" do
+      company = company_fixture()
+
+      valid_attrs = %{
+        first_name: "some first_name",
+        last_name: "some last_name",
+        email: "some email",
+        company_id: company.id
+      }
+
+      assert {:ok, %Contact{} = contact} = Sources.create_contact(valid_attrs)
+      assert contact.first_name == "some first_name"
+      assert contact.last_name == "some last_name"
+      assert contact.email == "some email"
+    end
+
+    test "create_contact/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Sources.create_contact(@invalid_attrs)
+    end
+
+    test "update_contact/2 with valid data updates the contact" do
+      contact = contact_fixture()
+
+      update_attrs = %{
+        first_name: "some updated first_name",
+        last_name: "some updated last_name",
+        email: "some updated email"
+      }
+
+      assert {:ok, %Contact{} = contact} = Sources.update_contact(contact, update_attrs)
+      assert contact.first_name == "some updated first_name"
+      assert contact.last_name == "some updated last_name"
+      assert contact.email == "some updated email"
+    end
+
+    test "update_contact/2 with invalid data returns error changeset" do
+      contact = contact_fixture()
+      assert {:error, %Ecto.Changeset{}} = Sources.update_contact(contact, @invalid_attrs)
+      assert contact == Sources.get_contact!(contact.id)
+    end
+
+    test "delete_contact/1 deletes the contact" do
+      contact = contact_fixture()
+      assert {:ok, %Contact{}} = Sources.delete_contact(contact)
+      assert_raise Ecto.NoResultsError, fn -> Sources.get_contact!(contact.id) end
+    end
+
+    test "change_contact/1 returns a contact changeset" do
+      contact = contact_fixture()
+      assert %Ecto.Changeset{} = Sources.change_contact(contact)
+    end
+  end
 end
