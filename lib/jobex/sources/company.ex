@@ -7,6 +7,7 @@ defmodule Jobex.Sources.Company do
   schema "companies" do
     field :name, :string
     field :country, :string
+    has_many :positions, Jobex.Applications.Position
 
     timestamps(type: :utc_datetime)
   end
