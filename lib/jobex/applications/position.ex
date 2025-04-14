@@ -10,6 +10,7 @@ defmodule Jobex.Applications.Position do
     field :published_on, :date
     field :applied_on, :date
     belongs_to :company, Jobex.Sources.Company
+    has_many :replies, Jobex.Applications.Reply
 
     timestamps(type: :utc_datetime)
   end

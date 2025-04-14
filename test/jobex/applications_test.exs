@@ -77,4 +77,69 @@ defmodule Jobex.ApplicationsTest do
       assert %Ecto.Changeset{} = Applications.change_position(position)
     end
   end
+
+  describe "replies" do
+    alias Jobex.Applications.Reply
+
+    import Jobex.ApplicationsFixtures
+
+    @invalid_attrs %{date: nil, feedback: nil, go_forward: nil}
+
+    test "list_replies/0 returns all replies" do
+      reply = reply_fixture()
+      assert Applications.list_replies() == [reply]
+    end
+
+    test "get_reply!/1 returns the reply with given id" do
+      reply = reply_fixture()
+      assert Applications.get_reply!(reply.id) == reply
+    end
+
+    test "create_reply/1 with valid data creates a reply" do
+      position = position_fixture()
+
+      valid_attrs = %{
+        date: ~D[2025-04-13],
+        feedback: "some feedback",
+        go_forward: true,
+        position_id: position.id
+      }
+
+      assert {:ok, %Reply{} = reply} = Applications.create_reply(valid_attrs)
+      assert reply.date == ~D[2025-04-13]
+      assert reply.feedback == "some feedback"
+      assert reply.go_forward == true
+    end
+
+    test "create_reply/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Applications.create_reply(@invalid_attrs)
+    end
+
+    test "update_reply/2 with valid data updates the reply" do
+      reply = reply_fixture()
+      update_attrs = %{date: ~D[2025-04-14], feedback: "some updated feedback", go_forward: false}
+
+      assert {:ok, %Reply{} = reply} = Applications.update_reply(reply, update_attrs)
+      assert reply.date == ~D[2025-04-14]
+      assert reply.feedback == "some updated feedback"
+      assert reply.go_forward == false
+    end
+
+    test "update_reply/2 with invalid data returns error changeset" do
+      reply = reply_fixture()
+      assert {:error, %Ecto.Changeset{}} = Applications.update_reply(reply, @invalid_attrs)
+      assert reply == Applications.get_reply!(reply.id)
+    end
+
+    test "delete_reply/1 deletes the reply" do
+      reply = reply_fixture()
+      assert {:ok, %Reply{}} = Applications.delete_reply(reply)
+      assert_raise Ecto.NoResultsError, fn -> Applications.get_reply!(reply.id) end
+    end
+
+    test "change_reply/1 returns a reply changeset" do
+      reply = reply_fixture()
+      assert %Ecto.Changeset{} = Applications.change_reply(reply)
+    end
+  end
 end

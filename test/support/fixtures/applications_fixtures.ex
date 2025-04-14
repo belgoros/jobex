@@ -25,4 +25,23 @@ defmodule Jobex.ApplicationsFixtures do
 
     position
   end
+
+  @doc """
+  Generate a reply.
+  """
+  def reply_fixture(attrs \\ %{}) do
+    position = position_fixture()
+
+    {:ok, reply} =
+      attrs
+      |> Enum.into(%{
+        date: ~D[2025-04-13],
+        feedback: "some feedback",
+        go_forward: true,
+        position_id: position.id
+      })
+      |> Jobex.Applications.create_reply()
+
+    reply
+  end
 end
