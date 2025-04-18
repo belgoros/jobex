@@ -15,6 +15,9 @@ alias Jobex.Sources.Company
 Repo.delete_all(Company)
 
 Enum.each(1..5, fn _ ->
-  %Company{name: Faker.Company.bs(), country: Faker.Address.country()}
+  %Company{
+    name: Faker.Company.bs() |> String.upcase(),
+    country: Faker.Address.country()
+  }
   |> Repo.insert!()
 end)

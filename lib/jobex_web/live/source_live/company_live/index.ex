@@ -18,7 +18,11 @@ defmodule JobexWeb.SourceLive.CompanyLive.Index do
       Listing Companies
     </.header>
 
-    <.table id="companies" rows={@streams.companies}>
+    <.table
+      id="companies"
+      rows={@streams.companies}
+      row_click={fn {_id, company} -> JS.navigate(~p"/companies/#{company}") end}
+    >
       <:col :let={{_id, company}} label="Name">{company.name}</:col>
       <:col :let={{_id, company}} label="Country">{company.country}</:col>
     </.table>

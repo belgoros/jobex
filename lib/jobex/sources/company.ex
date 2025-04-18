@@ -8,6 +8,7 @@ defmodule Jobex.Sources.Company do
     field :name, :string
     field :country, :string
     has_many :positions, Jobex.Applications.Position
+    has_many :contacts, Jobex.Sources.Contact
 
     timestamps(type: :utc_datetime)
   end
