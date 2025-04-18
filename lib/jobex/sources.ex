@@ -21,6 +21,13 @@ defmodule Jobex.Sources do
     Repo.all(Company)
   end
 
+  def get_company_with_positions!(id) do
+    case Ecto.UUID.cast(id) do
+      {:ok, uuid} -> Repo.get!(Company, uuid) |> Repo.preload(:positions)
+      :error -> raise Ecto.NoResultsError, queryable: Company
+    end
+  end
+
   @doc """
   Gets a single company.
 
