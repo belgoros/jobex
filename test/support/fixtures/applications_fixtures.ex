@@ -9,8 +9,9 @@ defmodule Jobex.ApplicationsFixtures do
   @doc """
   Generate a position.
   """
+
   def position_fixture(attrs \\ %{}) do
-    company = company_fixture()
+    company = Map.get(attrs, :company) || company_fixture()
 
     {:ok, position} =
       attrs
@@ -21,6 +22,8 @@ defmodule Jobex.ApplicationsFixtures do
         title: "some title",
         company_id: company.id
       })
+      # Prevent passing :company as an unexpected key
+      |> Map.delete(:company)
       |> Jobex.Applications.create_position()
 
     position
