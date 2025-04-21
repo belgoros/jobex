@@ -12,7 +12,7 @@
 
 defmodule Seeder do
   alias Jobex.Repo
-  alias Jobex.Sources.Company
+  alias Jobex.Sources.{Company, Contact}
   alias Jobex.Applications.Position
 
   @job_titles [
@@ -29,7 +29,10 @@ defmodule Seeder do
     Repo.delete_all(Company)
 
     create_companies()
-    |> Enum.each(fn company -> create_position_for(company) end)
+    |> Enum.each(fn company ->
+      create_position_for(company)
+      create_contacts_for(company)
+    end)
   end
 
   def create_companies do
@@ -59,6 +62,21 @@ defmodule Seeder do
           location: Enum.random(@locations),
           published_on: Faker.Date.backward(4),
           applied_on: Faker.Date.backward(2)
+        }
+        |> Repo.insert!()
+      end
+    )
+  end
+
+  defp create_contacts_for(company) do
+    Enum.each(
+      1..3,
+      fn _ ->
+        %Contact{
+          company_id: company.id,
+          email: Faker.Internet.email(),
+          first_name: Faker.Person.first_name(),
+          last_name: Faker.Person.last_name()
         }
         |> Repo.insert!()
       end
