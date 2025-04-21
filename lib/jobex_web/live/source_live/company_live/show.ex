@@ -6,7 +6,7 @@ defmodule JobexWeb.SourceLive.CompanyLive.Show do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex flex-col items-center justify-center min-h-screen p-6 bg-gray-50">
+    <div class="flex flex-col items-center justify-center p-6 bg-gray-50">
       <div class="w-full max-w-2xl p-6 space-y-4 bg-white shadow-lg rounded-2xl">
         <div class="flex items-center justify-between">
           <div>
@@ -36,10 +36,9 @@ defmodule JobexWeb.SourceLive.CompanyLive.Show do
             </ul>
           </div>
         <% end %>
+        <.back navigate={~p"/companies"}>Back to companies</.back>
       </div>
     </div>
-
-    <.back navigate={~p"/companies"}>Back to companies</.back>
     """
   end
 
