@@ -1,11 +1,4 @@
 @import "tailwindcss";
-
-@source "../../deps/petal_components/**/*.*ex";
-@import "../../deps/petal_components/assets/default.css";
-
-@import "./colors.css";
-
-@plugin "@tailwindcss/typography";
-@plugin "@tailwindcss/forms";
-
-@plugin "./tailwind_heroicons.js";
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark, cupcake;
+}

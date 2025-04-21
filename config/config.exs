@@ -43,10 +43,10 @@ config :esbuild,
 
 # Configure tailwind (the version is required)
 config :tailwind,
-  version: "4.0.9",
+  version: "4.0.0",
   jobex: [
     args: ~w(
-     --input=assets/css/app.css
+      --input=assets/css/app.css
       --output=priv/static/assets/app.css
     ),
     cd: Path.expand("..", __DIR__)

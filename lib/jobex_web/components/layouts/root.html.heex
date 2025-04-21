@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="[scrollbar-gutter:stable]">
+<html data-theme="cupcake" lang="en" class="[scrollbar-gutter:stable]">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +12,22 @@
     </script>
   </head>
   <body class="bg-white">
+    <div class="shadow-sm navbar bg-base-100">
+      <div class="flex-1">
+        <.link href={~p"/"} class="text-xl btn btn-ghost">
+          Jobex
+        </.link>
+      </div>
+      <div class="flex-none">
+        <ul class="px-1 menu menu-horizontal">
+          <li>
+            <.link href={~p"/companies"}>
+              Companies
+            </.link>
+          </li>
+        </ul>
+      </div>
+    </div>
     {@inner_content}
   </body>
 </html>
