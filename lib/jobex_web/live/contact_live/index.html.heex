@@ -1,8 +1,8 @@
 <.header>
-  Listing Contacts
+  {@page_title}
   <:actions>
-    <.link patch={~p"/contacts/new"}>
-      <.button>New Contact</.button>
+    <.link navigate={~p"/contacts/new"} class="btn">
+      New Contact
     </.link>
   </:actions>
 </.header>
@@ -18,15 +18,15 @@
     </.link>
   </:col>
 
-  <:col :let={{_dom_id, contact}} label="Priority">
+  <:col :let={{_dom_id, contact}} label="Last Name">
     {contact.last_name}
+  </:col>
+  <:col :let={{_dom_id, contact}} label="Email">
+    {contact.email}
   </:col>
 
   <:action :let={{_id, contact}}>
-    <div class="sr-only">
-      <.link navigate={~p"/contacts/#{contact}"}>Show</.link>
-    </div>
-    <.link patch={~p"/contacts/#{contact}/edit"}>Edit</.link>
+    <.link navigate={~p"/contacts/#{contact}/edit"}>Edit</.link>
   </:action>
   <:action :let={{id, contact}}>
     <.link
@@ -37,19 +37,3 @@
     </.link>
   </:action>
 </.table>
-
-<.modal
-  :if={@live_action in [:new, :edit]}
-  id="contact-modal"
-  show
-  on_cancel={JS.patch(~p"/contacts")}
->
-  <.live_component
-    module={JobexWeb.ContactLive.FormComponent}
-    id={@contact.id || :new}
-    title={@page_title}
-    action={@live_action}
-    contact={@contact}
-    patch={~p"/contacts"}
-  />
-</.modal>
