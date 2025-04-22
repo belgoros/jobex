@@ -141,6 +141,31 @@ defmodule Jobex.Sources do
   def get_contact!(id), do: Repo.get!(Contact, id)
 
   @doc """
+  Gets a single contact with the company.
+
+  Raises `Ecto.NoResultsError` if the Contact does not exist.
+
+  ## Examples
+
+      iex> get_contact!(123)
+      %Contact{}
+
+      iex> get_contact!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_contact_with_company!(id), do: Repo.get!(Contact, id) |> Repo.preload(:company)
+
+  def company_names_and_ids do
+    query =
+      from c in Company,
+        order_by: :name,
+        select: {c.name, c.id}
+
+    Repo.all(query)
+  end
+
+  @doc """
   Creates a contact.
 
   ## Examples
