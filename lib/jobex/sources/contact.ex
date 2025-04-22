@@ -23,7 +23,8 @@ defmodule Jobex.Sources.Contact do
   @required_attributes [
     :first_name,
     :last_name,
-    :email
+    :email,
+    :company_id
   ]
 
   @doc false
@@ -32,5 +33,6 @@ defmodule Jobex.Sources.Contact do
     |> cast(attrs, @accepted_attributes)
     |> validate_required(@required_attributes)
     |> unique_constraint(:email)
+    |> assoc_constraint(:company)
   end
 end

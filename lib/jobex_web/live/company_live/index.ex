@@ -1,4 +1,4 @@
-defmodule JobexWeb.SourceLive.CompanyLive.Index do
+defmodule JobexWeb.CompanyLive.Index do
   use JobexWeb, :live_view
 
   alias Jobex.Sources

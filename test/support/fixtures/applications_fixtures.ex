@@ -17,9 +17,9 @@ defmodule Jobex.ApplicationsFixtures do
       attrs
       |> Enum.into(%{
         applied_on: ~D[2025-04-13],
-        location: "some location",
+        location: "remote",
         published_on: ~D[2025-04-13],
-        title: "some title",
+        title: Faker.Person.En.title_job(),
         company_id: company.id
       })
       # Prevent passing :company as an unexpected key

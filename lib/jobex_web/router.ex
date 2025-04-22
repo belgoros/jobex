@@ -18,8 +18,15 @@ defmodule JobexWeb.Router do
     pipe_through :browser
 
     live "/", HomeLive
-    live "/companies", SourceLive.CompanyLive.Index, :index
-    live "/companies/:id", SourceLive.CompanyLive.Show, :show
+    live "/companies", CompanyLive.Index, :index
+    live "/companies/:id", CompanyLive.Show, :show
+
+    live "/contacts", ContactLive.Index, :index
+    live "/contacts/new", ContactLive.Form, :new
+    live "/contacts/:id/edit", ContactLive.Form, :edit
+
+    live "/contacts/:id", ContactLive.Show, :show
+    live "/contacts/:id/show/edit", ContactLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

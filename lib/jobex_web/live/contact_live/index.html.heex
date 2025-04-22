@@ -1,0 +1,39 @@
+<.header>
+  {@page_title}
+  <:actions>
+    <.link navigate={~p"/contacts/new"} class="btn">
+      New Contact
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="contacts"
+  rows={@streams.contacts}
+  row_click={fn {_id, contact} -> JS.navigate(~p"/contacts/#{contact}") end}
+>
+  <:col :let={{_dom_id, contact}} label="First Name">
+    <.link navigate={~p"/contacts/#{contact}"}>
+      {contact.first_name}
+    </.link>
+  </:col>
+
+  <:col :let={{_dom_id, contact}} label="Last Name">
+    {contact.last_name}
+  </:col>
+  <:col :let={{_dom_id, contact}} label="Email">
+    {contact.email}
+  </:col>
+
+  <:action :let={{_id, contact}}>
+    <.link navigate={~p"/contacts/#{contact}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, contact}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: contact.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>

@@ -5,11 +5,6 @@ defmodule Jobex.SourcesFixtures do
   """
 
   @doc """
-  Generate a unique category name.
-  """
-  def unique_company_name, do: "company-#{System.unique_integer([:positive])}"
-
-  @doc """
   Generate a company.
   """
   def company_fixture(attrs \\ %{}) do
@@ -17,7 +12,7 @@ defmodule Jobex.SourcesFixtures do
       attrs
       |> Enum.into(%{
         country: "some country",
-        name: unique_company_name()
+        name: Faker.Company.En.name()
       })
       |> Jobex.Sources.create_company()
 
@@ -39,8 +34,8 @@ defmodule Jobex.SourcesFixtures do
       attrs
       |> Enum.into(%{
         email: unique_contact_email(),
-        first_name: "some first_name",
-        last_name: "some last_name",
+        first_name: Faker.Person.first_name(),
+        last_name: Faker.Person.last_name(),
         company_id: company.id
       })
       |> Jobex.Sources.create_contact()
