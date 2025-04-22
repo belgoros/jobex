@@ -1,21 +1,38 @@
 defmodule JobexWeb.ContactLive.Show do
+  alias Jobex.Sources
   use JobexWeb, :live_view
 
-  alias Jobex.Sources
-
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def render(assigns) do
+    ~H"""
+    <.header>
+      Contact {@contact.id}
+      <:subtitle>This is a Contact record from your database.</:subtitle>
+      <:actions>
+        <.button phx-click={JS.dispatch("click", to: {:inner, "a"})}>
+          <.link navigate={~p"/contacts/#{@contact}/edit"}>
+            Edit contact
+          </.link>
+        </.button>
+      </:actions>
+    </.header>
+
+    <.list>
+      <:item title="First Name">{@contact.first_name}</:item>
+      <:item title="Last Name">{@contact.last_name}</:item>
+      <:item title="Email">{@contact.email}</:item>
+      <:item title="Company">{@contact.company.name}</:item>
+    </.list>
+
+    <.back navigate={~p"/contacts"}>Back to contacts</.back>
+    """
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    {:noreply,
+  def mount(%{"id" => id}, _session, socket) do
+    {:ok,
      socket
-     |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:contact, Sources.get_contact!(id))}
+     |> assign(:page_title, "Show Contact")
+     |> assign(:contact, Sources.get_contact_with_company!(id))}
   end
-
-  defp page_title(:show), do: "Show Contact"
-  defp page_title(:edit), do: "Edit Contact"
 end
