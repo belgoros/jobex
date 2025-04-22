@@ -5,10 +5,6 @@ defmodule Jobex.SourcesFixtures do
   """
 
   @doc """
-  Generate a unique category name.
-  """
-
-  @doc """
   Generate a company.
   """
   def company_fixture(attrs \\ %{}) do
