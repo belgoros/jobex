@@ -33,11 +33,6 @@ defmodule JobexWeb.ContactLive.Index do
   end
 
   @impl true
-  def handle_info({JobexWeb.ContactLive.FormComponent, {:saved, contact}}, socket) do
-    {:noreply, stream_insert(socket, :contacts, contact)}
-  end
-
-  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     contact = Sources.get_contact!(id)
     {:ok, _} = Sources.delete_contact(contact)
