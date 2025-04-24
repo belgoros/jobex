@@ -10,7 +10,7 @@ defmodule JobexWeb.ContactLive.Show do
       <:subtitle>This is a Contact record from your database.</:subtitle>
       <:actions>
         <.button phx-click={JS.dispatch("click", to: {:inner, "a"})}>
-          <.link navigate={~p"/contacts/#{@contact}/edit"}>
+          <.link navigate={~p"/contacts/#{@contact}/edit"} class="button">
             Edit contact
           </.link>
         </.button>
