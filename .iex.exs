@@ -1,4 +1,5 @@
 alias Jobex.Repo
+alias Jobex.Sources
 alias Jobex.Sources.{Company, Contact}
 alias Jobex.Applications.Position
 
