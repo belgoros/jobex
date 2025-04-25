@@ -45,6 +45,29 @@ defmodule Jobex.Sources do
   def get_company!(id), do: Repo.get!(Company, id)
 
   @doc """
+  Finds a company by name or creates a new company.
+
+  ## Examples
+
+      iex> find_or_create_company_by_name(%{name: value, country: value})
+      {:ok, %Company{}}
+
+      iex> find_or_create_company_by_name(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def find_or_create_company_by_name(%{name: name, country: country}) do
+    case Repo.get_by(Company, name: name) do
+      nil ->
+        %Company{name: name, country: country}
+        |> Repo.insert()
+
+      company ->
+        {:ok, company}
+    end
+  end
+
+  @doc """
   Creates a company.
 
   ## Examples
@@ -155,6 +178,29 @@ defmodule Jobex.Sources do
 
   """
   def get_contact_with_company!(id), do: Repo.get!(Contact, id) |> Repo.preload(:company)
+
+  @doc """
+  Finds a contact by email or creates a new one.
+
+  ## Examples
+
+      iex> find_or_create_contact_by_email(%{email: value})
+      {:ok, %Contact{}}
+
+      iex> find_or_create_contact_by_email(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def find_or_create_contact_by_email(%Contact{} = contact) do
+    case Repo.get_by(Contact, email: contact.email) do
+      nil ->
+        contact
+        |> Repo.insert()
+
+      contact ->
+        {:ok, contact}
+    end
+  end
 
   def company_names_and_ids do
     query =
