@@ -1,10 +1,10 @@
 # Jobex
 
-This a Phoenix application that allows you to manage your job applications.
+This a Phoenix application that allows to manage your job applications.
 
 To start your Phoenix server:
 
-- Run `mix setup` to install and setup dependencies
+- Run `mix setup` to install and setup dependencies and populate the database with initial data (see `seeds.exs`)
 - Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
