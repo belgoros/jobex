@@ -18,7 +18,10 @@ defmodule Jobex.Applications do
 
   """
   def list_positions do
-    Repo.all(Position)
+    Position
+    |> preload(:company)
+    |> order_by([p], desc: p.published_on)
+    |> Repo.all()
   end
 
   @doc """
