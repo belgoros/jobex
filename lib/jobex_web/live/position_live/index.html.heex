@@ -42,7 +42,7 @@
   <.live_component
     module={JobexWeb.PositionLive.FormComponent}
     id={@position.id || :new}
-    title={@page_title}
+    page_title={@page_title}
     action={@live_action}
     position={@position}
     patch={~p"/positions"}
