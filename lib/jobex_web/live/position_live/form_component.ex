@@ -43,7 +43,6 @@ defmodule JobexWeb.PositionLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign(:page_title, "New Position")
      |> assign(:company_options, Sources.company_names_and_ids())
      |> assign_new(:form, fn ->
        to_form(Applications.change_position(position))
