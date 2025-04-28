@@ -1,0 +1,34 @@
+<.header>
+  Position {@position.id}
+  <:subtitle>This is a position record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/positions/#{@position}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit position</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Title">{@position.title}</:item>
+  <:item title="Location">{@position.location}</:item>
+  <:item title="Published on">{@position.published_on}</:item>
+  <:item title="Applied on">{@position.applied_on}</:item>
+</.list>
+
+<.back navigate={~p"/positions"}>Back to positions</.back>
+
+<.modal
+  :if={@live_action == :edit}
+  id="position-modal"
+  show
+  on_cancel={JS.patch(~p"/positions/#{@position}")}
+>
+  <.live_component
+    module={JobexWeb.PositionLive.FormComponent}
+    id={@position.id}
+    page_title={@page_title}
+    action={@live_action}
+    position={@position}
+    patch={~p"/positions/#{@position}"}
+  />
+</.modal>

@@ -18,7 +18,10 @@ defmodule Jobex.Applications do
 
   """
   def list_positions do
-    Repo.all(Position)
+    Position
+    |> preload(:company)
+    |> order_by([p], desc: p.published_on)
+    |> Repo.all()
   end
 
   @doc """
@@ -35,7 +38,7 @@ defmodule Jobex.Applications do
       ** (Ecto.NoResultsError)
 
   """
-  def get_position!(id), do: Repo.get!(Position, id)
+  def get_position!(id), do: Repo.get!(Position, id) |> Repo.preload(:company)
 
   @doc """
   Creates a position.
@@ -53,6 +56,7 @@ defmodule Jobex.Applications do
     %Position{}
     |> Position.changeset(attrs)
     |> Repo.insert()
+    |> preload_company()
   end
 
   @doc """
@@ -71,6 +75,7 @@ defmodule Jobex.Applications do
     position
     |> Position.changeset(attrs)
     |> Repo.update()
+    |> preload_company()
   end
 
   @doc """
@@ -197,4 +202,7 @@ defmodule Jobex.Applications do
   def change_reply(%Reply{} = reply, attrs \\ %{}) do
     Reply.changeset(reply, attrs)
   end
+
+  defp preload_company({:ok, position}), do: {:ok, Repo.preload(position, :company)}
+  defp preload_company(error), do: error
 end

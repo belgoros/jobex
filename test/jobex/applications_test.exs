@@ -9,7 +9,13 @@ defmodule Jobex.ApplicationsTest do
     import Jobex.ApplicationsFixtures
     import Jobex.SourcesFixtures
 
-    @invalid_attrs %{title: nil, location: nil, published_on: nil, applied_on: nil}
+    @invalid_attrs %{
+      applied_on: nil,
+      location: nil,
+      published_on: nil,
+      title: nil,
+      company_id: nil
+    }
 
     test "list_positions/0 returns all positions" do
       position = position_fixture()
