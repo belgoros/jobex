@@ -3,9 +3,22 @@ defmodule JobexWeb.PositionLiveTest do
 
   import Phoenix.LiveViewTest
   import Jobex.ApplicationsFixtures
+  import Jobex.SourcesFixtures
 
-  @create_attrs %{location: "some location", title: "some title", published_on: "2025-04-26", applied_on: "2025-04-26"}
-  @update_attrs %{location: "some updated location", title: "some updated title", published_on: "2025-04-27", applied_on: "2025-04-27"}
+  @create_attrs %{
+    location: "some location",
+    title: "some title",
+    published_on: "2025-04-26",
+    applied_on: "2025-04-26",
+    company_id: nil
+  }
+  @update_attrs %{
+    location: "some updated location",
+    title: "some updated title",
+    published_on: "2025-04-27",
+    applied_on: "2025-04-27",
+    company_id: nil
+  }
   @invalid_attrs %{location: nil, title: nil, published_on: nil, applied_on: nil}
 
   defp create_position(_) do
@@ -13,8 +26,13 @@ defmodule JobexWeb.PositionLiveTest do
     %{position: position}
   end
 
+  def create_company(_) do
+    company = company_fixture()
+    %{company: company}
+  end
+
   describe "Index" do
-    setup [:create_position]
+    setup [:create_position, :create_company]
 
     test "lists all positions", %{conn: conn, position: position} do
       {:ok, _index_live, html} = live(conn, ~p"/positions")
@@ -23,7 +41,7 @@ defmodule JobexWeb.PositionLiveTest do
       assert html =~ position.location
     end
 
-    test "saves new position", %{conn: conn} do
+    test "saves new position", %{conn: conn, company: company} do
       {:ok, index_live, _html} = live(conn, ~p"/positions")
 
       assert index_live |> element("a", "New Position") |> render_click() =~
@@ -36,7 +54,7 @@ defmodule JobexWeb.PositionLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#position-form", position: @create_attrs)
+             |> form("#position-form", position: %{@create_attrs | company_id: company.id})
              |> render_submit()
 
       assert_patch(index_live, ~p"/positions")
@@ -59,7 +77,9 @@ defmodule JobexWeb.PositionLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#position-form", position: @update_attrs)
+             |> form("#position-form",
+               position: %{@update_attrs | company_id: position.company_id}
+             )
              |> render_submit()
 
       assert_patch(index_live, ~p"/positions")
@@ -100,7 +120,9 @@ defmodule JobexWeb.PositionLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert show_live
-             |> form("#position-form", position: @update_attrs)
+             |> form("#position-form",
+               position: %{@update_attrs | company_id: position.company_id}
+             )
              |> render_submit()
 
       assert_patch(show_live, ~p"/positions/#{position}")
