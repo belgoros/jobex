@@ -26,6 +26,9 @@ defmodule Jobex.ApplicationsFixtures do
       |> Map.delete(:company)
       |> Jobex.Applications.create_position()
 
+    # <-- preload :company after creation
+    position = Jobex.Repo.preload(position, :company)
+
     position
   end
 
