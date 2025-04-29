@@ -15,15 +15,18 @@ defmodule JobexWeb.CompanyLive.Show do
           </div>
         </div>
 
+        <div class="flex justify-end mb-4 items-right">
+          <.link navigate={~p"/positions/new"} class="btn-light">
+            <.icon
+              name="hero-plus-circle"
+              class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+            /> New Position
+          </.link>
+        </div>
+
         <%= if @company.positions == [] do %>
           <div class="py-6 text-center">
             <p class="mb-4 text-gray-600">No open positions yet</p>
-            <.link navigate={~p"/positions/new"} class="btn-light">
-              <.icon
-                name="hero-user-plus"
-                class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
-              /> New Position
-            </.link>
           </div>
         <% else %>
           <div>
