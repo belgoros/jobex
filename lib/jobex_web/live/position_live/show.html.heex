@@ -1,6 +1,6 @@
 <.header>
-  Position {@position.id}
-  <:subtitle>This is a position record from your database.</:subtitle>
+  Position at {@position.company.name}
+  <:subtitle :if={@position.company.country}>{@position.company.country}</:subtitle>
   <:actions>
     <.link patch={~p"/positions/#{@position}/show/edit"} phx-click={JS.push_focus()}>
       <.button>Edit position</.button>
