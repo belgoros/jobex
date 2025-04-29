@@ -40,6 +40,9 @@ defmodule Jobex.Applications do
   """
   def get_position!(id), do: Repo.get!(Position, id) |> Repo.preload(:company)
 
+  def get_position_with_replies!(id),
+    do: Repo.get!(Position, id) |> Repo.preload([:company, :replies])
+
   @doc """
   Creates a position.
 
