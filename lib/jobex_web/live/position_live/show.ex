@@ -13,7 +13,7 @@ defmodule JobexWeb.PositionLive.Show do
     {:noreply,
      socket
      |> assign(:page_title, page_title(socket.assigns.live_action))
-     |> assign(:position, Applications.get_position!(id))}
+     |> assign(:position, Applications.get_position_with_replies!(id))}
   end
 
   defp page_title(:show), do: "Show Position"
