@@ -18,9 +18,12 @@ defmodule JobexWeb.CompanyLive.Show do
         <%= if @company.positions == [] do %>
           <div class="py-6 text-center">
             <p class="mb-4 text-gray-600">No open positions yet</p>
-            <button class="px-4 py-2 text-white transition bg-blue-600 rounded-xl hover:bg-blue-700">
-              Create New Position
-            </button>
+            <.link navigate={~p"/positions/new"} class="btn-light">
+              <.icon
+                name="hero-user-plus"
+                class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+              /> New Position
+            </.link>
           </div>
         <% else %>
           <div>

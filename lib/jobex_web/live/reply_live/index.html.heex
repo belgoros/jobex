@@ -1,8 +1,11 @@
 <.header>
   Listing Replies
   <:actions>
-    <.link patch={~p"/replies/new"}>
-      <.button>New Reply</.button>
+    <.link navigate={~p"/replies/new"} class="btn-light">
+      <.icon
+        name="hero-chat-bubble-left-right"
+        class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+      /> Add Reply
     </.link>
   </:actions>
 </.header>

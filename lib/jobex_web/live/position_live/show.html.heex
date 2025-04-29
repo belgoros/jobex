@@ -2,8 +2,15 @@
   Position at {@position.company.name}
   <:subtitle :if={@position.company.country}>{@position.company.country}</:subtitle>
   <:actions>
-    <.link patch={~p"/positions/#{@position}/show/edit"} phx-click={JS.push_focus()}>
-      <.button>Edit position</.button>
+    <.link
+      patch={~p"/positions/#{@position}/show/edit"}
+      phx-click={JS.push_focus()}
+      class="btn-light"
+    >
+      <.icon
+        name="hero-user-plus"
+        class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+      /> Edit Position
     </.link>
   </:actions>
 </.header>
@@ -14,6 +21,32 @@
   <:item title="Published on">{@position.published_on}</:item>
   <:item title="Applied on">{@position.applied_on}</:item>
 </.list>
+
+<%= if @position.replies == [] do %>
+  <div class="py-6 text-center">
+    <p class="mb-4 text-gray-600">😢 No replies received yet...</p>
+    <.link navigate={~p"/replies/new"} class="btn-light">
+      <.icon
+        name="hero-chat-bubble-left-right"
+        class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+      /> Add Reply
+    </.link>
+  </div>
+<% else %>
+  <div>
+    <h2 class="mb-2 text-lg font-semibold text-gray-800">Received replies</h2>
+    <ul class="space-y-2">
+      <li
+        :for={reply <- @position.replies}
+        class="p-4 transition bg-gray-100 rounded-xl hover:bg-gray-200"
+      >
+        <p class="font-medium text-gray-900">{reply.date}</p>
+        <p class="text-sm text-gray-600">{reply.feedback}</p>
+        <p class="text-sm text-gray-600">{reply.go_forward}</p>
+      </li>
+    </ul>
+  </div>
+<% end %>
 
 <.back navigate={~p"/positions"}>Back to positions</.back>
 
