@@ -4,17 +4,32 @@ defmodule JobexWeb.ReplyLiveTest do
   import Phoenix.LiveViewTest
   import Jobex.ApplicationsFixtures
 
-  @create_attrs %{date: "2025-04-28", feedback: "some feedback", go_forward: true}
-  @update_attrs %{date: "2025-04-29", feedback: "some updated feedback", go_forward: false}
-  @invalid_attrs %{date: nil, feedback: nil, go_forward: false}
+  @create_attrs %{
+    date: "2025-04-28",
+    feedback: "some feedback",
+    go_forward: true,
+    position_id: nil
+  }
+  @update_attrs %{
+    date: "2025-04-29",
+    feedback: "some updated feedback",
+    go_forward: false,
+    position_id: nil
+  }
+  @invalid_attrs %{date: nil, feedback: nil, go_forward: false, position_id: nil}
 
   defp create_reply(_) do
     reply = reply_fixture()
     %{reply: reply}
   end
 
+  defp create_position(_) do
+    position = position_fixture()
+    %{position: position}
+  end
+
   describe "Index" do
-    setup [:create_reply]
+    setup [:create_reply, :create_position]
 
     test "lists all replies", %{conn: conn, reply: reply} do
       {:ok, _index_live, html} = live(conn, ~p"/replies")
@@ -23,7 +38,7 @@ defmodule JobexWeb.ReplyLiveTest do
       assert html =~ reply.feedback
     end
 
-    test "saves new reply", %{conn: conn} do
+    test "saves new reply", %{conn: conn, position: position} do
       {:ok, index_live, _html} = live(conn, ~p"/replies")
 
       assert index_live |> element("a", "New Reply") |> render_click() =~
@@ -36,7 +51,7 @@ defmodule JobexWeb.ReplyLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#reply-form", reply: @create_attrs)
+             |> form("#reply-form", reply: %{@create_attrs | position_id: position.id})
              |> render_submit()
 
       assert_patch(index_live, ~p"/replies")
@@ -59,7 +74,7 @@ defmodule JobexWeb.ReplyLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert index_live
-             |> form("#reply-form", reply: @update_attrs)
+             |> form("#reply-form", reply: %{@update_attrs | position_id: reply.position_id})
              |> render_submit()
 
       assert_patch(index_live, ~p"/replies")
@@ -100,7 +115,7 @@ defmodule JobexWeb.ReplyLiveTest do
              |> render_change() =~ "can&#39;t be blank"
 
       assert show_live
-             |> form("#reply-form", reply: @update_attrs)
+             |> form("#reply-form", reply: %{@update_attrs | position_id: reply.position_id})
              |> render_submit()
 
       assert_patch(show_live, ~p"/replies/#{reply}")
