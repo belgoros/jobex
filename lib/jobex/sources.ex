@@ -18,7 +18,8 @@ defmodule Jobex.Sources do
 
   """
   def list_companies do
-    Repo.all(Company)
+    from(c in Company, order_by: [asc: c.name])
+    |> Repo.all()
   end
 
   def get_company_with_positions!(id) do
