@@ -32,15 +32,21 @@ defmodule JobexWeb.Router do
     live "/positions/new", PositionLive.Index, :new
     live "/positions/:id/edit", PositionLive.Index, :edit
 
-    live "/positions/:id/replies", PositionLive.Show, :show
+    live "/positions/:position_id", PositionLive.Show, :show
     live "/positions/:id/show/edit", PositionLive.Show, :edit
 
     live "/replies", ReplyLive.Index, :index
-    live "/replies/new", ReplyLive.Index, :new
-    live "/replies/:id/edit", ReplyLive.Index, :edit
+    live "/positions/:position_id/new-reply", PositionLive.Show, :new_reply
 
-    live "/replies/:id", ReplyLive.Show, :show
-    live "/replies/:id/show/edit", ReplyLive.Show, :edit
+    live "/positions/:position_id/replies/:reply_id/edit",
+         PositionLive.Show,
+         :edit_reply
+
+    # live "/replies/new", ReplyLive.Index, :new
+    # live "/replies/:id/edit", ReplyLive.Index, :edit
+
+    # live "/replies/:id", ReplyLive.Show, :show
+    # live "/replies/:id/show/edit", ReplyLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

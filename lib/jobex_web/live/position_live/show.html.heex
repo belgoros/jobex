@@ -25,7 +25,7 @@
 <%= if @position.replies == [] do %>
   <div class="py-6 text-center">
     <p class="mb-4 text-gray-600">😢 No replies received yet...</p>
-    <.link navigate={~p"/replies/new"} class="btn-light">
+    <.link navigate={~p"/positions/#{@position}/new-reply"} class="btn-light">
       <.icon
         name="hero-chat-bubble-left-right"
         class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
@@ -33,35 +33,47 @@
     </.link>
   </div>
 <% else %>
-  <div>
-    <h2 class="mb-2 text-lg font-semibold text-gray-800">Received replies</h2>
-    <ul class="space-y-2">
-      <li
-        :for={reply <- @position.replies}
-        class="p-4 transition bg-gray-100 rounded-xl hover:bg-gray-200"
-      >
-        <p class="font-medium text-gray-900">{reply.date}</p>
-        <p class="text-sm text-gray-600">{reply.feedback}</p>
-        <.go_forward_badge go_forward={reply.go_forward} />
-      </li>
-    </ul>
-  </div>
+  <.table id="replies" rows={@position.replies}>
+    <:col :let={reply} label="Date">{reply.date}</:col>
+    <:col :let={reply} label="Feedback">{reply.feedback}</:col>
+    <:col :let={reply} label="Go Forward">
+      <.go_forward_badge go_forward={reply.go_forward} />
+    </:col>
+    <:col :let={reply} label="Actions">
+      <.dropdown_menu id={"#{reply.id}-menu"}>
+        <.link
+          navigate={~p"/positions/#{@position}/replies/#{reply}/edit"}
+          class="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-gray-700 hover:bg-gray-100"
+        >
+          <.icon name="hero-pencil" class="w-4 h-4" /> Edit Reply
+        </.link>
+        <button
+          type="button"
+          phx-click="delete_reply"
+          phx-value-id={reply.id}
+          data-confirm="Are you sure you want to delete the reply?"
+          class="flex items-center w-full gap-2 px-4 py-2 text-sm text-left text-red-600 hover:bg-red-50"
+        >
+          <.icon name="hero-trash" class="w-4 h-4" /> Delete Reply
+        </button>
+      </.dropdown_menu>
+    </:col>
+  </.table>
 <% end %>
 
 <.back navigate={~p"/positions"}>Back to positions</.back>
 
 <.modal
-  :if={@live_action == :edit}
-  id="position-modal"
+  :if={@live_action in [:new_reply, :edit_reply]}
+  id="reply-modal"
+  on_cancel={JS.navigate(~p"/positions/#{@position}", replace: true)}
   show
-  on_cancel={JS.patch(~p"/positions/#{@position}/replies")}
 >
   <.live_component
-    module={JobexWeb.PositionLive.FormComponent}
-    id={@position.id}
-    page_title={@page_title}
-    action={@live_action}
+    module={JobexWeb.ReplyLive.ReplyDialog}
+    id="reply"
     position={@position}
-    patch={~p"/positions/#{@position}/replies"}
+    reply={assigns[:reply] || default_reply()}
+    action={@live_action}
   />
 </.modal>
