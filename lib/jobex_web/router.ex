@@ -32,7 +32,7 @@ defmodule JobexWeb.Router do
     live "/positions/new", PositionLive.Index, :new
     live "/positions/:id/edit", PositionLive.Index, :edit
 
-    live "/positions/:id", PositionLive.Show, :show
+    live "/positions/:id/replies", PositionLive.Show, :show
     live "/positions/:id/show/edit", PositionLive.Show, :edit
 
     live "/replies", ReplyLive.Index, :index

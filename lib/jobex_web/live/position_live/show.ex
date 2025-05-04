@@ -2,6 +2,7 @@ defmodule JobexWeb.PositionLive.Show do
   use JobexWeb, :live_view
 
   alias Jobex.Applications
+  import JobexWeb.CustomComponents
 
   @impl true
   def mount(_params, _session, socket) do

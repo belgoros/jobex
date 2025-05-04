@@ -42,7 +42,7 @@
       >
         <p class="font-medium text-gray-900">{reply.date}</p>
         <p class="text-sm text-gray-600">{reply.feedback}</p>
-        <p class="text-sm text-gray-600">{reply.go_forward}</p>
+        <.go_forward_badge go_forward={reply.go_forward} />
       </li>
     </ul>
   </div>
@@ -54,7 +54,7 @@
   :if={@live_action == :edit}
   id="position-modal"
   show
-  on_cancel={JS.patch(~p"/positions/#{@position}")}
+  on_cancel={JS.patch(~p"/positions/#{@position}/replies")}
 >
   <.live_component
     module={JobexWeb.PositionLive.FormComponent}
@@ -62,6 +62,6 @@
     page_title={@page_title}
     action={@live_action}
     position={@position}
-    patch={~p"/positions/#{@position}"}
+    patch={~p"/positions/#{@position}/replies"}
   />
 </.modal>
