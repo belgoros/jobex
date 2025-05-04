@@ -8,7 +8,7 @@ defmodule Jobex.Csv.EctoMapper do
   end
 
   defp map_entry_row(row) do
-    [_, company_name, full_name, email, _applied_on, _] = row
+    [company_name, full_name, email, _applied_on, _replied_with] = row
 
     with {:ok, company} <- create_company(company_name),
          {:ok, contact} <- create_contact(full_name, email, company.id),
