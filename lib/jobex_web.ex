@@ -56,6 +56,8 @@ defmodule JobexWeb do
       use Phoenix.LiveView,
         layout: {JobexWeb.Layouts, :app}
 
+      import Jobex.Guards
+
       unquote(html_helpers())
     end
   end
