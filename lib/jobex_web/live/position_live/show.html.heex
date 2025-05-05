@@ -22,17 +22,17 @@
   <:item title="Applied on">{@position.applied_on}</:item>
 </.list>
 
-<%= if @position.replies == [] do %>
-  <div class="py-6 text-center">
-    <p class="mb-4 text-gray-600">😢 No replies received yet...</p>
-    <.link navigate={~p"/positions/#{@position}/new-reply"} class="btn-light">
-      <.icon
-        name="hero-chat-bubble-left-right"
-        class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
-      /> Add Reply
-    </.link>
-  </div>
-<% else %>
+<div class="py-6 text-center">
+  <p :if={@position.replies == []} class="mb-4 text-gray-600">😢 No replies received yet...</p>
+  <.link navigate={~p"/positions/#{@position}/new-reply"} class="btn-light">
+    <.icon
+      name="hero-chat-bubble-left-right"
+      class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+    /> Add Reply
+  </.link>
+</div>
+
+<%= if Enum.any?(@position.replies) do %>
   <.table id="replies" rows={@position.replies}>
     <:col :let={reply} label="Date">{reply.date}</:col>
     <:col :let={reply} label="Feedback">{reply.feedback}</:col>
