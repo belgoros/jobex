@@ -172,7 +172,8 @@ defmodule Jobex.Sources do
 
   """
   def list_contacts do
-    Repo.all(Contact)
+    from(c in Contact, order_by: [asc: c.last_name])
+    |> Repo.all()
   end
 
   @doc """
