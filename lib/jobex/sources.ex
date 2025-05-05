@@ -22,11 +22,38 @@ defmodule Jobex.Sources do
     |> Repo.all()
   end
 
+  @doc """
+  Returns a list of companies based on the given `options`.
+
+  Example options:
+
+  %{page: 2, per_page: 5}
+  """
+  def list_companies(options) when is_map(options) do
+    from(c in Company, order_by: [asc: c.name])
+    |> paginate(options)
+    |> Repo.all()
+  end
+
+  defp paginate(query, %{page: page, per_page: per_page}) do
+    offset = max((page - 1) * per_page, 0)
+
+    query
+    |> limit(^per_page)
+    |> offset(^offset)
+  end
+
+  defp paginate(query, _options), do: query
+
   def get_company_with_positions!(id) do
     case Ecto.UUID.cast(id) do
       {:ok, uuid} -> Repo.get!(Company, uuid) |> Repo.preload(:positions)
       :error -> raise Ecto.NoResultsError, queryable: Company
     end
+  end
+
+  def company_count do
+    Repo.aggregate(Company, :count, :id)
   end
 
   @doc """
