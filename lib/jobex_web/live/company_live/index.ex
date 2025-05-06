@@ -5,10 +5,6 @@ defmodule JobexWeb.CompanyLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    # {:ok,
-    # socket
-    # |> assign(:page_title, "Listing Companies")
-    # |> stream(:companies, Sources.list_companies())}
     {:ok, socket}
   end
 
