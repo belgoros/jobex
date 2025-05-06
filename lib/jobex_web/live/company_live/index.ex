@@ -30,40 +30,6 @@ defmodule JobexWeb.CompanyLive.Index do
     {:noreply, socket}
   end
 
-  @impl true
-  def render(assigns) do
-    ~H"""
-    <.header>
-      Listing Companies
-    </.header>
-
-    <.table
-      id="companies"
-      rows={@companies}
-      row_click={fn company -> JS.navigate(~p"/companies/#{company}") end}
-    >
-      <:col :let={company} label="Name">{company.name}</:col>
-      <:col :let={company} label="Country">{company.country}</:col>
-    </.table>
-
-    <div class="footer">
-      <div class="pagination">
-        <.link
-          :for={{page_number, current_page?} <- pages(@options, @company_count)}
-          class={if current_page?, do: "active"}
-          patch={~p"/companies?#{%{@options | page: page_number}}"}
-        >
-          {page_number}
-        </.link>
-      </div>
-    </div>
-    """
-  end
-
-  # defp more_pages?(options, company_count) do
-  #  options.page * options.per_page < company_count
-  # end
-
   defp pages(options, company_count) do
     page_count = ceil(company_count / options.per_page)
 
