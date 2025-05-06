@@ -2,6 +2,7 @@ defmodule JobexWeb.CompanyLive.Index do
   use JobexWeb, :live_view
 
   alias Jobex.Sources
+  alias Jobex.Sources.Company
 
   @impl true
   def mount(_params, _session, socket) do
@@ -20,49 +21,55 @@ defmodule JobexWeb.CompanyLive.Index do
 
     socket =
       socket
-      |> assign(
-        options: options,
-        page_title: "Listing Companies",
-        company_count: Sources.company_count(),
-        companies: Sources.list_companies(options)
-      )
+      |> assign(options: options)
+      |> apply_action(socket.assigns.live_action, params)
+
+    {:noreply, socket}
+  end
+
+  defp apply_action(socket, :edit_company, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Company")
+    |> assign(:company, Sources.get_company!(id))
+  end
+
+  defp apply_action(socket, :new_company, _params) do
+    socket
+    |> assign(:page_title, "New Company")
+    |> assign(:company, %Company{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Companies")
+    |> assign(:company, nil)
+    |> assign(:company_count, Sources.company_count())
+    |> assign(:companies, Sources.list_companies(socket.assigns.options))
+  end
+
+  @impl true
+  def handle_info({JobexWeb.CompanyLive.FormComponent, {:saved, _company}}, socket) do
+    socket =
+      socket
+      |> assign(:company_count, Sources.company_count())
+      |> assign(:companies, Sources.list_companies(socket.assigns.options))
 
     {:noreply, socket}
   end
 
   @impl true
-  def render(assigns) do
-    ~H"""
-    <.header>
-      Listing Companies
-    </.header>
+  def handle_event("delete", %{"id" => id}, socket) do
+    company = Sources.get_company!(id)
+    {:ok, _} = Sources.delete_company(company)
 
-    <.table
-      id="companies"
-      rows={@companies}
-      row_click={fn company -> JS.navigate(~p"/companies/#{company}") end}
-    >
-      <:col :let={company} label="Name">{company.name}</:col>
-      <:col :let={company} label="Country">{company.country}</:col>
-    </.table>
+    socket =
+      socket
+      |> put_flash(:info, "Company deleted successfully")
+      |> assign(:company_count, Sources.company_count())
+      |> assign(:companies, Sources.list_companies(socket.assigns.options))
 
-    <div class="footer">
-      <div class="pagination">
-        <.link
-          :for={{page_number, current_page?} <- pages(@options, @company_count)}
-          class={if current_page?, do: "active"}
-          patch={~p"/companies?#{%{@options | page: page_number}}"}
-        >
-          {page_number}
-        </.link>
-      </div>
-    </div>
-    """
+    {:noreply, socket}
   end
-
-  # defp more_pages?(options, company_count) do
-  #  options.page * options.per_page < company_count
-  # end
 
   defp pages(options, company_count) do
     page_count = ceil(company_count / options.per_page)

@@ -1,0 +1,59 @@
+<.header>
+  {@page_title}
+  <:actions>
+    <.link patch={~p"/companies/new"} class="btn-light">
+      <.icon
+        name="hero-user-plus"
+        class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+      /> New Company
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="companies"
+  rows={@companies}
+  row_click={fn company -> JS.navigate(~p"/companies/#{company}") end}
+>
+  <:col :let={company} label="Name">{company.name}</:col>
+  <:col :let={company} label="Country">{company.country}</:col>
+  <:action :let={company}>
+    <.link patch={~p"/companies/#{company}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={company}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: company.id}) |> hide("##{company.id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<div class="footer">
+  <div class="pagination">
+    <.link
+      :for={{page_number, current_page?} <- pages(@options, @company_count)}
+      class={if current_page?, do: "active"}
+      patch={~p"/companies?#{%{@options | page: page_number}}"}
+    >
+      {page_number}
+    </.link>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new_company, :edit_company]}
+  id="company-modal"
+  show
+  on_cancel={JS.patch(~p"/companies")}
+>
+  <.live_component
+    module={JobexWeb.CompanyLive.FormComponent}
+    id={@company.id || :new}
+    title={@page_title}
+    action={@live_action}
+    company={@company}
+    patch={~p"/companies"}
+  />
+</.modal>
