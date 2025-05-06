@@ -1,0 +1,68 @@
+<div class="flex flex-col items-center justify-center p-6 bg-gray-50">
+  <div class="w-full max-w-2xl p-6 space-y-4 bg-white shadow-lg rounded-2xl">
+    <div class="flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">{@company.name}</h1>
+        <p :if={@company.country} class="text-gray-600">Country: {@company.country}</p>
+      </div>
+    </div>
+
+    <div class="py-6 text-center">
+      <p :if={@company.positions == []} class="mb-4 text-gray-600">😢 No open positions yet...</p>
+      <.link navigate={~p"/companies/#{@company}/new-position"} class="btn-light">
+        <.icon
+          name="hero-briefcase"
+          class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
+        /> Add Position
+      </.link>
+    </div>
+
+    <%= if Enum.any?(@company.positions) do %>
+      <div>
+        <h2 class="mb-2 text-lg font-semibold text-gray-800">Open Positions</h2>
+        <ul class="space-y-2">
+          <li
+            :for={position <- @company.positions}
+            class="p-4 transition bg-gray-100 rounded-xl hover:bg-gray-200"
+          >
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-4">
+                <.icon name="hero-briefcase" class="w-6 h-6 text-indigo-600" />
+                <p class="text-sm text-gray-600">{position.published_on}</p>
+              </div>
+              <button
+                type="button"
+                phx-click="delete_position"
+                phx-value-id={position.id}
+                data-confirm="Are you sure you want to delete the position?"
+                class="text-red-600 hover:text-red-800"
+              >
+                <.icon name="hero-trash" class="w-4 h-4" />
+              </button>
+            </div>
+            <.link navigate={~p"/positions/#{position}"}>
+              <p class="font-medium text-gray-900">{position.title}</p>
+              <p class="text-sm text-gray-600">{position.location}</p>
+            </.link>
+          </li>
+        </ul>
+      </div>
+    <% end %>
+    <.back navigate={~p"/companies"}>Back to companies</.back>
+  </div>
+</div>
+
+<.modal
+  :if={@live_action in [:new_position, :edit_position]}
+  id="position-modal"
+  on_cancel={JS.navigate(~p"/companies/#{@company}", replace: true)}
+  show
+>
+  <.live_component
+    module={JobexWeb.PositionLive.PositionDialog}
+    id="position"
+    company={@company}
+    position={assigns[:position] || default_position()}
+    action={@live_action}
+  />
+</.modal>
