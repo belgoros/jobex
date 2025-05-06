@@ -36,8 +36,10 @@ defmodule JobexWeb.CompanyLive.Show do
                 :for={position <- @company.positions}
                 class="p-4 transition bg-gray-100 rounded-xl hover:bg-gray-200"
               >
-                <p class="font-medium text-gray-900">{position.title}</p>
-                <p class="text-sm text-gray-600">{position.location}</p>
+                <.link navigate={~p"/positions/#{position}"}>
+                  <p class="font-medium text-gray-900">{position.title}</p>
+                  <p class="text-sm text-gray-600">{position.location}</p>
+                </.link>
               </li>
             </ul>
           </div>
