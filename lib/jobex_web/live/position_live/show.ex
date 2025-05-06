@@ -12,7 +12,8 @@ defmodule JobexWeb.PositionLive.Show do
     if position do
       {:ok,
        assign(socket,
-         position: position
+         position: position,
+         page_title: position.title
        )
        |> apply_action(params)}
     else
