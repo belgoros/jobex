@@ -103,7 +103,7 @@ defmodule JobexWeb.PositionLiveTest do
     test "displays position", %{conn: conn, position: position} do
       {:ok, _show_live, html} = live(conn, ~p"/positions/#{position}")
 
-      assert html =~ "Show Position"
+      assert html =~ position.title
       assert html =~ position.location
     end
 
