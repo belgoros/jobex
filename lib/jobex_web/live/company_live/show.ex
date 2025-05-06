@@ -2,63 +2,83 @@ defmodule JobexWeb.CompanyLive.Show do
   use JobexWeb, :live_view
 
   alias Jobex.Sources
+  alias Jobex.Applications
+  alias Jobex.Applications.Position
 
   @impl true
-  def render(assigns) do
-    ~H"""
-    <div class="flex flex-col items-center justify-center p-6 bg-gray-50">
-      <div class="w-full max-w-2xl p-6 space-y-4 bg-white shadow-lg rounded-2xl">
-        <div class="flex items-center justify-between">
-          <div>
-            <h1 class="text-2xl font-bold text-gray-900">{@company.name}</h1>
-            <p :if={@company.country} class="text-gray-600">Country: {@company.country}</p>
-          </div>
-        </div>
+  def mount(%{"company_id" => id} = params, _session, socket) when is_uuid(id) do
+    company = Sources.get_company_with_positions!(id)
 
-        <div class="flex justify-end mb-4 items-right">
-          <.link navigate={~p"/positions/new"} class="btn-light">
-            <.icon
-              name="hero-plus-circle"
-              class="w-4 h-4 text-indigo-600 transition hover:text-indigo-400/75"
-            /> New Position
-          </.link>
-        </div>
+    if company do
+      {:ok,
+       assign(socket,
+         company: company,
+         page_title: company.name
+       )
+       |> apply_action(params)}
+    else
+      socket =
+        socket
+        |> put_flash(:error, "Position not found")
+        |> redirect(to: ~p"/positions")
 
-        <%= if @company.positions == [] do %>
-          <div class="py-6 text-center">
-            <p class="mb-4 text-gray-600">No open positions yet</p>
-          </div>
-        <% else %>
-          <div>
-            <h2 class="mb-2 text-lg font-semibold text-gray-800">Open Positions</h2>
-            <ul class="space-y-2">
-              <li
-                :for={position <- @company.positions}
-                class="p-4 transition bg-gray-100 rounded-xl hover:bg-gray-200"
-              >
-                <.link navigate={~p"/positions/#{position}"}>
-                  <p class="font-medium text-gray-900">{position.title}</p>
-                  <p class="text-sm text-gray-600">{position.location}</p>
-                </.link>
-              </li>
-            </ul>
-          </div>
-        <% end %>
-        <.back navigate={~p"/companies"}>Back to companies</.back>
-      </div>
-    </div>
-    """
+      {:ok, socket}
+    end
   end
 
-  @impl true
-  def mount(%{"id" => id}, _session, socket) do
-    company = Sources.get_company_with_positions!(id)
-    company_positions = company.positions |> Enum.count()
+  def mount(_invalid_id, _session, socket) do
+    socket =
+      socket
+      |> put_flash(:error, "Position not found")
+      |> redirect(to: ~p"/positions")
 
-    {:ok,
-     socket
-     |> assign(:page_title, "#{company.name}")
-     |> assign(:company, company)
-     |> assign(:company_positions, company_positions)}
+    {:ok, socket}
+  end
+
+  def apply_action(%{assigns: %{live_action: :edit_position}} = socket, %{
+        "position_id" => position_id
+      }) do
+    position = Enum.find(socket.assigns.company.positions, &(&1.id == position_id))
+
+    if position do
+      assign(socket, position: position)
+    else
+      socket
+      |> put_flash(:error, "Position not found")
+      |> redirect(to: ~p"/companies/#{socket.assigns.company}")
+    end
+  end
+
+  def apply_action(socket, _), do: socket
+
+  @impl true
+  def handle_event("delete_position", %{"id" => position_id}, socket) do
+    position = Enum.find(socket.assigns.company.positions, &(&1.id == position_id))
+
+    if position do
+      case Applications.delete_position(position) do
+        {:ok, _} ->
+          socket =
+            socket
+            |> put_flash(:info, "Position deleted")
+            |> push_navigate(to: ~p"/companies/#{socket.assigns.company.id}", replace: true)
+
+          {:noreply, socket}
+
+        {:error, _} ->
+          {:noreply, put_flash(socket, :error, "Failed to delete position")}
+      end
+    else
+      {:noreply, put_flash(socket, :error, "Reply not found")}
+    end
+  end
+
+  defp default_position do
+    %Position{
+      title: "Software Engineer",
+      location: "Remote",
+      published_on: Date.utc_today(),
+      applied_on: Date.utc_today()
+    }
   end
 end
