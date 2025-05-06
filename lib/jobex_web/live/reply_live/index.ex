@@ -33,11 +33,6 @@ defmodule JobexWeb.ReplyLive.Index do
   end
 
   @impl true
-  def handle_info({JobexWeb.ReplyLive.FormComponent, {:saved, reply}}, socket) do
-    {:noreply, stream_insert(socket, :replies, reply)}
-  end
-
-  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     reply = Applications.get_reply!(id)
     {:ok, _} = Applications.delete_reply(reply)
