@@ -48,8 +48,13 @@ defmodule JobexWeb.CompanyLive.Index do
   end
 
   @impl true
-  def handle_info({JobexWeb.CompanyLive.FormComponent, {:saved, company}}, socket) do
-    {:noreply, stream_insert(socket, :companies, company)}
+  def handle_info({JobexWeb.CompanyLive.FormComponent, {:saved, _company}}, socket) do
+    socket =
+      socket
+      |> assign(:company_count, Sources.company_count())
+      |> assign(:companies, Sources.list_companies(socket.assigns.options))
+
+    {:noreply, socket}
   end
 
   @impl true
