@@ -18,7 +18,7 @@ defmodule JobexWeb.CompanyLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:name]} type="text" label="Name" />
+        <.input field={@form[:name]} type="text" label="Name" required />
         <.input field={@form[:country]} type="text" label="Country" />
 
         <:actions>
