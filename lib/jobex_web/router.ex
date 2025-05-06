@@ -21,7 +21,9 @@ defmodule JobexWeb.Router do
     live "/companies", CompanyLive.Index, :index
     live "/companies/new", CompanyLive.Index, :new_company
     live "/companies/:id/edit", CompanyLive.Index, :edit_company
-    live "/companies/:id", CompanyLive.Show, :show
+    live "/companies/:company_id", CompanyLive.Show, :show
+    live "/companies/:company_id/new-position", CompanyLive.Show, :new_position
+    live "/companies/:company_id/positions/:position_id/edit", CompanyLive.Show, :edit_position
 
     live "/contacts", ContactLive.Index, :index
     live "/contacts/new", ContactLive.Form, :new
