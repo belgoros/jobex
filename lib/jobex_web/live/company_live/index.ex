@@ -2,6 +2,7 @@ defmodule JobexWeb.CompanyLive.Index do
   use JobexWeb, :live_view
 
   alias Jobex.Sources
+  alias Jobex.Sources.Company
 
   @impl true
   def mount(_params, _session, socket) do
@@ -20,12 +21,47 @@ defmodule JobexWeb.CompanyLive.Index do
 
     socket =
       socket
-      |> assign(
-        options: options,
-        page_title: "Listing Companies",
-        company_count: Sources.company_count(),
-        companies: Sources.list_companies(options)
-      )
+      |> assign(options: options)
+      |> apply_action(socket.assigns.live_action, params)
+
+    {:noreply, socket}
+  end
+
+  defp apply_action(socket, :edit_company, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Company")
+    |> assign(:company, Sources.get_company!(id))
+  end
+
+  defp apply_action(socket, :new_company, _params) do
+    socket
+    |> assign(:page_title, "New Company")
+    |> assign(:company, %Company{})
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Companies")
+    |> assign(:company, nil)
+    |> assign(:company_count, Sources.company_count())
+    |> assign(:companies, Sources.list_companies(socket.assigns.options))
+  end
+
+  @impl true
+  def handle_info({JobexWeb.CompanyLive.FormComponent, {:saved, company}}, socket) do
+    {:noreply, stream_insert(socket, :companies, company)}
+  end
+
+  @impl true
+  def handle_event("delete", %{"id" => id}, socket) do
+    company = Sources.get_company!(id)
+    {:ok, _} = Sources.delete_company(company)
+
+    socket =
+      socket
+      |> put_flash(:info, "Company deleted successfully")
+      |> assign(:company_count, Sources.company_count())
+      |> assign(:companies, Sources.list_companies(socket.assigns.options))
 
     {:noreply, socket}
   end
