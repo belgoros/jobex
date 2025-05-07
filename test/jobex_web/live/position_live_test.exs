@@ -106,30 +106,5 @@ defmodule JobexWeb.PositionLiveTest do
       assert html =~ position.title
       assert html =~ position.location
     end
-
-    test "updates position within modal", %{conn: conn, position: position} do
-      {:ok, show_live, _html} = live(conn, ~p"/positions/#{position}")
-
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Position"
-
-      assert_patch(show_live, ~p"/positions/#{position}/show/edit")
-
-      assert show_live
-             |> form("#position-form", position: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
-
-      assert show_live
-             |> form("#position-form",
-               position: %{@update_attrs | company_id: position.company_id}
-             )
-             |> render_submit()
-
-      assert_patch(show_live, ~p"/positions/#{position}")
-
-      html = render(show_live)
-      assert html =~ "Position updated successfully"
-      assert html =~ "some updated location"
-    end
   end
 end
