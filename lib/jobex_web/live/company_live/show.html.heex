@@ -54,7 +54,7 @@
 
 <.modal
   :if={@live_action in [:new_position, :edit_position]}
-  id="position-modal"
+  id="position-dialog"
   on_cancel={JS.navigate(~p"/companies/#{@company}", replace: true)}
   show
 >
